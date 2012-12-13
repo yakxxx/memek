@@ -3,3 +3,4 @@ env/
 .project
 .pydevproject
 .settings/
+secret_config.py
