@@ -1,11 +1,12 @@
 #coding: utf-8
 import unittest
 import requests as req
+import re
 from conf import *
-from pprint import pprint
 from mock import Mock
-from api_client import *
+from pprint import pprint
 
+from api_client import *
 
 
 class ApiTest(unittest.TestCase):
@@ -54,15 +55,46 @@ class ApiTest(unittest.TestCase):
     def test_get_promoted(self):
         a = Api()
         promoted = a.get_promoted()
-        reference = req.get(API_URL+'links/promoted/appkey,'+APP_KEY)
-        self.assertListEqual(promoted, reference.json)
+        self.assertGreater(len(promoted[0]['title']), 0)
+        
+    def test_get_comments(self):
+        a = Api()
+        promoted = a.get_promoted()
+        link_id = a.parse_link_id_from_url(promoted[0]['url'])
+        self.assertTrue(re.match(r'[0-9]*', link_id))
+
+        comments = a.get_comments(link_id)
+        pprint(comments)
+
+    def test_parse_link_id(self):
+        url = u'http://www.wykop.pl/link/1363053/maszyny-ktorych-jeszcze-nie-znamy/'
+        a = Api()
+        link_id = a.parse_link_id_from_url(url)
+        self.assertEqual(link_id, '1363053')
+        self.assertRaises(WrongData, a.parse_link_id_from_url, 'xxaxaxaxa' )
+        
     
 class WykopTest(unittest.TestCase):    
 
+    @unittest.skip
     def test_get_promoted_pages(self):
-        ret_0 = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',page,1')
-        ret = req.get(API_URL+'links/promoted/appkey,'+APP_KEY)
+        ret_0 = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',page,1,output,clear')
+        ret = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',output,clear')
         self.assertListEqual(ret_0.json, ret.json) # Page numbers start from 0
+    
+    @unittest.skip    
+    def test_get_comments(self):
+        ret = req.get(API_URL+'link/comments/1362863/appkey,'+APP_KEY+',output,clear')
+        pprint(ret.json)
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
         
     
