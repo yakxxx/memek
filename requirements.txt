@@ -4,3 +4,4 @@ mongoengine==0.7.8
 nltk==2.0.4
 pymongo==2.4.1
 requests==0.14.2
+nose==1.2.1

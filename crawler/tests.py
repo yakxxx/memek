@@ -7,9 +7,15 @@ from mock import Mock
 from pprint import pprint
 
 from api_client import *
+from ..common.models import *
 
 
 class ApiTest(unittest.TestCase):
+    
+    def __init__(self, *args, **kwargs):
+        super(ApiTest, self).__init__(*args, **kwargs)
+        a = Api()
+        self.promoted = a.get_promoted()
     
     def test_make_api_params_str(self):
         a = Api()
@@ -59,13 +65,24 @@ class ApiTest(unittest.TestCase):
         
     def test_get_comments(self):
         a = Api()
-        promoted = a.get_promoted()
-        link_id = a.parse_link_id_from_url(promoted[0]['url'])
+        link_id = a.parse_link_id_from_url(self.promoted[0]['url'])
         self.assertTrue(re.match(r'[0-9]*', link_id))
 
         comments = a.get_comments(link_id)
-        pprint(comments)
+        self.assertGreater(len(comments), 0)
+        
+    def test_load_comments_into_model(self):
+        a = Api()
+        link_id = a.parse_link_id_from_url(self.promoted[0]['url'])
+        comments = a.get_comments(link_id)
+        model_comment = Comment(**comments[0])
+        self.assertEqual(model_comment.comment_id, comments[0]['id'])
 
+    def test_load_articles_into_model(self):
+        a = Api()
+        art = Article(**self.promoted[0])
+        self.assertEqual(art.article_id, self.promoted[0]['id'])
+        
     def test_parse_link_id(self):
         url = u'http://www.wykop.pl/link/1363053/maszyny-ktorych-jeszcze-nie-znamy/'
         a = Api()
@@ -81,6 +98,7 @@ class WykopTest(unittest.TestCase):
         ret_0 = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',page,1,output,clear')
         ret = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',output,clear')
         self.assertListEqual(ret_0.json, ret.json) # Page numbers start from 0
+        pprint(ret.json)
     
     @unittest.skip    
     def test_get_comments(self):
