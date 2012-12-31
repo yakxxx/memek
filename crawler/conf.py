@@ -1,4 +1,4 @@
-from ..secret_config import *
+from secret_config import *
 import logging
 
 # Log everything, and send it to stderr.

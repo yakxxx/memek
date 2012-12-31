@@ -6,8 +6,8 @@ from conf import *
 from mock import Mock
 from pprint import pprint
 
-from api_client import *
-from ..common.models import *
+from crawler.api_client import *
+from common.models import *
 
 import mongoengine
 
@@ -22,6 +22,8 @@ class ApiTest(unittest.TestCase):
         
     def setUp(self):
         self.a = Api()
+        Article.drop_collection()
+        Comment.drop_collection()
     
     def test_make_api_params_str(self):
         api_str = self.a._make_api_params_str({'a':1, 'b': 'asd'})
@@ -121,8 +123,12 @@ class WykopTest(unittest.TestCase):
     def test_get_comments(self):
         ret = req.get(API_URL+'link/comments/1362863/appkey,'+APP_KEY+',output,clear')
         pprint(ret.json)
-    
-    
+        
+#    @unittest.skip    
+    def test_get_promoted_to_big_pageno(self):
+        ret = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',page,999999,output,clear')
+        self.assertEqual(ret.status_code, 200)
+        self.assertListEqual(ret.json, [])
     
     
     
