@@ -9,6 +9,9 @@ from pprint import pprint
 from api_client import *
 from ..common.models import *
 
+import mongoengine
+
+mongoengine.connect(DB_NAME+'_tests')
 
 class ApiTest(unittest.TestCase):
     
@@ -73,16 +76,36 @@ class ApiTest(unittest.TestCase):
         comments = self.a.get_comments(link_id)
         model_comment = Comment(**comments[0])
         self.assertEqual(model_comment.comment_id, comments[0]['id'])
-
+      
+        try:
+            model_comment.save()
+        except Exception as e:
+            self.fail(e)
+            
     def test_load_articles_into_model(self):
         art = Article(**self.promoted[0])
         self.assertEqual(art.article_id, self.promoted[0]['id'])
+        
+        try:
+            art.save()
+        except Exception as e:
+            self.fail(e)
         
     def test_parse_link_id(self):
         url = u'http://www.wykop.pl/link/1363053/maszyny-ktorych-jeszcze-nie-znamy/'
         link_id = self.a.parse_link_id_from_url(url)
         self.assertEqual(link_id, '1363053')
-        self.assertRaises(WrongData, self.a.parse_link_id_from_url, 'xxaxaxaxa' )
+        self.assertRaises(WrongData, self.a.parse_link_id_from_url, 'xxaxaxaxa')
+        
+    def test_clear_comments(self):
+        comments = [{ 'date': '2012-12-30 14:49:24'}]
+        self.a._clear_comments(comments)
+        self.assertEqual(type(comments[0]['date']), datetime)
+        
+        #Will it work without leading zeros? 
+        comments = [{ 'date': '2012-1-1 14:49:24'}]
+        self.a._clear_comments(comments)
+        self.assertEqual(type(comments[0]['date']), datetime)
         
     
 class WykopTest(unittest.TestCase):    
@@ -91,7 +114,7 @@ class WykopTest(unittest.TestCase):
     def test_get_promoted_pages(self):
         ret_0 = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',page,1,output,clear')
         ret = req.get(API_URL+'links/promoted/appkey,'+APP_KEY+',output,clear')
-        self.assertListEqual(ret_0.json, ret.json) # Page numbers start from 0
+        self.assertListEqual(ret_0.json, ret.json) # Page numbers start from 1
         pprint(ret.json)
     
     @unittest.skip    

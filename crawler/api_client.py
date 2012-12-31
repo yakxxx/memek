@@ -3,15 +3,20 @@ import requests as req
 from conf import *
 import logging
 import re
+from datetime import datetime
 
 class Api(object):
 
     def get_promoted(self, page=1):
-        return self._get('links/promoted', api_params = self._build_api_params({'page': page}))
+        promoted = self._get('links/promoted', api_params = self._build_api_params({'page': page}))
+        self._clear_promoted(promoted)
+        return promoted
     
     def get_comments(self, link_id):
-        return self._get('link/comments/'+link_id, api_params = self._build_api_params())
-        
+        comments = self._get('link/comments/'+link_id, api_params = self._build_api_params())
+        self._clear_comments(comments)
+        return comments
+    
     def _get(self, url, method_params=[], api_params={}):
         full_url = API_URL + url + '/' + self._make_method_params_str(method_params) \
                        + '/' + self._make_api_params_str(api_params)
@@ -55,6 +60,18 @@ class Api(object):
             return match.group(1)
         else:
             raise WrongData('url not containing link_id in proper format')
+        
+    def _clear_promoted(self, promoted):
+        for p in promoted:
+            p['date'] = datetime.strptime(p['date'], '%Y-%m-%d %H:%M:%S')
+            
+        return promoted
+
+    def _clear_comments(self, comments):
+        for c in comments:
+            c['date'] = datetime.strptime(c['date'], '%Y-%m-%d %H:%M:%S')
+        return comments
+    
 
 
 class ApiError(Exception):
