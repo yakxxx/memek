@@ -22,23 +22,34 @@ class TestCommentCrawler(unittest.TestCase):
         b.save()
         
         
+        
     def test_run(self):
         crawl = CommentCrawler()
         crawl.a.get_comments = Mock(side_effect=[
                                             [ 
-                                              Comment(body='aaaaa', comment_id=123),
-                                              Comment(body='bbbbb', comment_id=124)
+                                              {'body':'aaaaa', 'comment_id':123},
+                                              {'body':'bbbbb', 'comment_id':124}
                                             ],
                                             
                                             [ 
-                                              Comment(body='aaaaa', comment_id=125),
-                                              Comment(body='bbbbb', comment_id=126)
+                                              {'body':'aaaaa', 'comment_id':125},
+                                              {'body':'bbbbb', 'comment_id':126}
                                             ]
                                                 ])
         crawl.run()
         self.assertEqual(Comment.objects.count(), 4)
-
-
-    
+        c123 = Comment.objects.get(comment_id=123)
+        self.assertEqual(c123.article.article_id, 1111)
+        self.assertTrue(c123.article.comments_crawled)
+        
+        
+    def test_run_with_errors(self):
+        url = 'http://www.wykop.pl/ramka/1369071/zycie-przestepcze-w-przedwojennej-polsce/'
+        [Article(url = url, article_id=6666+i).save() for i in xrange(1000)]
+        crawl = CommentCrawler()
+        crawl.a.get_comments = Mock(side_effect=ApiError)
+        crawl.run()
+        self.assertEqual(crawl._err_count, 21)
+        
     
     

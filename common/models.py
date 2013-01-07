@@ -51,7 +51,7 @@ class Comment(Document):
     can_vote = BooleanField()
     date = DateTimeField()
     deleted = BooleanField()
-    embed = StringField()
+    embed = DictField()
     comment_id = IntField(unique = True)
     link = ListField()
     parent_id = IntField()
