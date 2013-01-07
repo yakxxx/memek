@@ -54,22 +54,26 @@ class Api(object):
         default.update(custom_params)
         return default
     
-    def parse_link_id_from_url(self, url):
-        match = re.search(r'/link/([0-9]*)/', url)
+    @classmethod
+    def parse_link_id_from_url(cls, url):
+        match = re.search(r'/(link|ramka)/([0-9]*)/', url)
         if match:
-            return match.group(1)
+            return match.group(2)
         else:
-            raise WrongData('url not containing link_id in proper format')
+            raise WrongData('url not containing link_id in proper format, %s' % url)
         
     def _clear_promoted(self, promoted):
         for p in promoted:
             p['date'] = datetime.strptime(p['date'], '%Y-%m-%d %H:%M:%S')
-            
+            p['article_id'] = p['id']
+            del p['id']
         return promoted
 
     def _clear_comments(self, comments):
         for c in comments:
             c['date'] = datetime.strptime(c['date'], '%Y-%m-%d %H:%M:%S')
+            c['comment_id'] = c['id']
+            del c['id']
         return comments
     
 

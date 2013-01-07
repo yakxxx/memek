@@ -77,7 +77,7 @@ class ApiTest(unittest.TestCase):
         link_id = self.a.parse_link_id_from_url(self.promoted[0]['url'])
         comments = self.a.get_comments(link_id)
         model_comment = Comment(**comments[0])
-        self.assertEqual(model_comment.comment_id, comments[0]['id'])
+        self.assertEqual(model_comment.comment_id, comments[0]['comment_id'])
       
         try:
             model_comment.save()
@@ -86,7 +86,7 @@ class ApiTest(unittest.TestCase):
             
     def test_load_articles_into_model(self):
         art = Article(**self.promoted[0])
-        self.assertEqual(art.article_id, self.promoted[0]['id'])
+        self.assertEqual(art.article_id, self.promoted[0]['article_id'])
         
         try:
             art.save()
@@ -100,12 +100,12 @@ class ApiTest(unittest.TestCase):
         self.assertRaises(WrongData, self.a.parse_link_id_from_url, 'xxaxaxaxa')
         
     def test_clear_comments(self):
-        comments = [{ 'date': '2012-12-30 14:49:24'}]
+        comments = [{ 'date': '2012-12-30 14:49:24', 'id': '121232'}]
         self.a._clear_comments(comments)
         self.assertEqual(type(comments[0]['date']), datetime)
         
         #Will it work without leading zeros? 
-        comments = [{ 'date': '2012-1-1 14:49:24'}]
+        comments = [{ 'date': '2012-1-1 14:49:24', 'id': '121232'}]
         self.a._clear_comments(comments)
         self.assertEqual(type(comments[0]['date']), datetime)
         

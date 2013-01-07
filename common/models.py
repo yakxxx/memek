@@ -1,30 +1,8 @@
 from mongoengine import *
 
-
-class Comment(Document):
-    author = StringField()
-    author_avatar = StringField()
-    author_avatar = StringField()
-    author_avatar_big = StringField()
-    author_avatar_lo = StringField()
-    author_avatar_med = StringField()
-    author_group = IntField()
-    author_sex = StringField()
-    blocked = BooleanField()
-    body = StringField()
-    can_vote = BooleanField()
-    date = DateTimeField()
-    deleted = BooleanField()
-    embed = StringField()
-    comment_id = IntField(db_field = 'id', unique = True)
-    link = ListField()
-    parent_id = IntField()
-    vote_count = IntField()
-    vote_count_minus = IntField()
-    vote_count_plus = IntField()
-
     
 class Article(Document):
+    # **** fields from api ****
     author = StringField()
     author_avatar = StringField()
     author_avatar_big = StringField()
@@ -40,7 +18,7 @@ class Article(Document):
     description = StringField()
     group = StringField()
     has_own_content = BooleanField()
-    article_id = IntField(db_field = 'id', unique = True)
+    article_id = IntField(unique = True)
     is_hot = BooleanField()
     plus18 = BooleanField()
     preview = StringField()
@@ -53,3 +31,38 @@ class Article(Document):
     type = StringField()
     url = StringField()
     vote_count = IntField()
+    
+    #***** control fields *****
+    comments_crawled = BooleanField(default=False)
+
+
+class Comment(Document):
+    # **** fields from api ****
+    author = StringField()
+    author_avatar = StringField()
+    author_avatar = StringField()
+    author_avatar_big = StringField()
+    author_avatar_lo = StringField()
+    author_avatar_med = StringField()
+    author_group = IntField()
+    author_sex = StringField()
+    blocked = BooleanField()
+    body = StringField()
+    can_vote = BooleanField()
+    date = DateTimeField()
+    deleted = BooleanField()
+    embed = StringField()
+    comment_id = IntField(unique = True)
+    link = ListField()
+    parent_id = IntField()
+    vote_count = IntField()
+    vote_count_minus = IntField()
+    vote_count_plus = IntField()
+
+    #***** control fields *****
+    article = ReferenceField(Article)
+    
+    
+    
+    
+    
