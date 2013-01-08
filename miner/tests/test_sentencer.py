@@ -21,4 +21,6 @@ class TestSentencer(unittest.TestCase):
         resp = self.s._break_to_sentences(u'Ja cię :3 ale to jest fajnie')
         self.assertListEqual(resp, [u'Ja cię ', u' ale to jest fajnie'])
 
-    
+    def test_clear_text(self):
+        txt = self.s._clear_text(u"O boże boże bożenko :P Jak mogłaś, to robić ? z cyganem 77 halo ")
+        self.assertEqual(txt, u"O boże boże bożenko  Jak mogłaś to robić  z cyganem 77 halo ")
