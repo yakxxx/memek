@@ -40,8 +40,8 @@ class TestTexter(unittest.TestCase):
         Comment.drop_collection()
         
     def test_create_corpus(self):
-        text = self.t.create_corpus()
-        self.assertGreater(len(text), 40)
+        self.t.create_corpus()
+        self.assertGreater(len(self.t.text), 40)
         
     def test_queryset(self):
         qs = self.t._in_date_range_queryset()
@@ -59,4 +59,8 @@ class TestTexter(unittest.TestCase):
     def test_corpus_of_article(self):
         text_list = self.t._make_corpus_of_article(self.a2)
         self.assertGreater(len(text_list), 0)
+        
+    def test_clear_text(self):
+        txt = self.t._clear_text(u"O boże boże bożenko :P Jak mogłaś, to robić ? z cyganem 77 halo ")
+        self.assertEqual(txt, u"o boże boże bożenko jak mogłaś to robić z cyganem 77 halo ")
         
