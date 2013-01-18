@@ -2,7 +2,7 @@
 
 ##What is it?
 
-Memek is tool to automatically monitor subjects of discussion in the Internet over time.
+Memek is a tool which automatically monitors subjects of discussion in the Internet over time.
 It's implementation gets data to analysis from Polish site [Wykop](http://wykop.pl) (it's Polish clone of reddit).
 It consists of two packages: crawler and miner. Crawler gets data of articles and comments from WykopAPI.
 Miner is responsible for extraction of main discussion subjects.
