@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="css/screen.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/timeliner.js"></script>
+        
+    </head>
+    <body>
+    
+        <div id="timelineContainer">
+            {% for month in months %}
+            <div class="timelineMajor">
+                <h2 class="timelineMajorMarker"><span>{{ month.month_date.strftime("%Y %B") }}</span></h2>
+                {% for week in month.month_data %}
+                    {% if week.week_data %}
+                    <dl class="timelineMinor">
+                        <dt id="event-week-{{ week.week_date }}"><a>{{ week.week_date }}</a></dt>
+                        <dd class="timelineEvent" id="event-week-{{ week.week_date }}EX" style="display: none; ">
+                            <ul class="mem_listing">
+                                {% for mem in week.week_data %}
+                                    <li><a target="_blank" href="{{ utils.create_search_link(mem, week.week_date) }}">{{ mem }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </dd>
+                    </dl>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% endfor %}            
+            <div class="clear"></div>
+        </div>
+        
+    </body>
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    	   $.timeliner({startState: 'open'}); 
+    	});
+    
+    </script>
+</html>

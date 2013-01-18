@@ -11,7 +11,11 @@ class Collocator(object):
     def __init__(self, words):
         self.words = words
         path = os.path.dirname(__file__)
-        f = codecs.open(os.path.join(path,'stopwords.txt'), 'r', 'utf-8')
+        try:
+            f = codecs.open(os.path.join(path,'stopwords.txt'), 'r', 'utf-8')
+        except:
+            logging.error('Can\'t open stopwords.txt file')
+            
         stop_words = f.read()
         f.close()
         
@@ -29,7 +33,7 @@ class Collocator(object):
         best_bigrams = finder.nbest(bigram_measures.chi_sq, 100000) 
         
         finder3 = TrigramCollocationFinder.from_words(self.words)
-        finder3.apply_freq_filter(freq_filter)
+        finder3.apply_freq_filter(freq_filter - 1 if freq_filter > 2 else 2)
         finder3.apply_word_filter(lambda w: len(w) < 4 or w in self._stop_words)
         finder3.apply_ngram_filter(lambda w1, w2, w3: len(w1) + len(w2) + len(w3) < 13)
         best_trigrams = finder3.nbest(trigram_measures.chi_sq, 100000) 

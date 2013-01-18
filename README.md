@@ -74,5 +74,17 @@ It will get data from your database from starting date, split it into week long 
 
 To get collocations out of our corpora run:
 
-`python iterative_finder 108 weeks` where 108 is number of last week in your weeks dir and `weeks` is subdirectory to get corpus files.
+`python iterative_finder 108 weeks` where 108 is number of last week in your weeks dir and `weeks` is subdirectory to get corpus files. 
+This command outputs found collocations to file `output.txt`
 
+### Generating timeline
+
+You can generate html/js/css site to present mined data on timeline. To generate this file copy your `output.txt` into presentation directory.
+
+```bash
+cp output.txt presentation
+cd presentation
+python create_index.py
+```
+
+You just generated `index.html`. Now see it with your browser. If You want to put it on webserver remember to copy js, css images and inc directories with your index.html.
