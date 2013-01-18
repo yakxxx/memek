@@ -1,4 +1,4 @@
-# Memek - discussion monitoring tool?
+# Memek - discussion monitoring tool
 
 ##What is it?
 
@@ -87,4 +87,14 @@ cd presentation
 python create_index.py
 ```
 
-You just generated `index.html`. Now see it with your browser. If You want to put it on webserver remember to copy js, css images and inc directories with your index.html.
+You've just generated `index.html`. Now see it with your browser. If You want to put it on webserver remember to copy js, css images and inc directories with your index.html.
+
+
+### Testing
+
+Application comes with unittests. You can run them by typing
+
+```bash
+nosetests -s -vv
+```
+
