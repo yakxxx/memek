@@ -5,3 +5,5 @@ env/
 .settings/
 secret_config.py
 weeks/*.txt
+*.txt
+presentation/*.txt
