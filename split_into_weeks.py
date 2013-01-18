@@ -1,6 +1,5 @@
 #coding: utf-8
 import sys
-sys.path.append('../..')
 from miner.texter import *
 from common.conf import *
 import mongoengine

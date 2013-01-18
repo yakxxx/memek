@@ -26,11 +26,13 @@ class Collocator(object):
         finder.apply_freq_filter(freq_filter)
         finder.apply_word_filter(lambda w: len(w) < 4 or w in self._stop_words)
         finder.apply_ngram_filter(lambda w1, w2: len(w1) + len(w2) < 10)
-        best_bigrams = finder.nbest(bigram_measures.pmi, 100000) 
+        best_bigrams = finder.nbest(bigram_measures.chi_sq, 100000) 
         
         finder3 = TrigramCollocationFinder.from_words(self.words)
-        finder3.apply_freq_filter(5)
-        best_trigrams = finder3.nbest(trigram_measures.chi_sq, 10) 
+        finder3.apply_freq_filter(freq_filter)
+        finder3.apply_word_filter(lambda w: len(w) < 4 or w in self._stop_words)
+        finder3.apply_ngram_filter(lambda w1, w2, w3: len(w1) + len(w2) + len(w3) < 13)
+        best_trigrams = finder3.nbest(trigram_measures.chi_sq, 100000) 
          
         
-        return sorted(best_bigrams)
+        return best_bigrams + best_trigrams

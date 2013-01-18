@@ -4,3 +4,4 @@ env/
 .pydevproject
 .settings/
 secret_config.py
+weeks/*.txt

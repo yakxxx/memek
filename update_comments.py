@@ -8,5 +8,5 @@ import mongoengine
 
 if __name__ == "__main__":
     db = mongoengine.connect(DB_NAME)
-    crawler = CommentCrawler(10)
+    crawler = CommentCrawler()
     crawler.run()
